@@ -1,5 +1,6 @@
 import os 
 import sys
+import shutil
 
 def make_sorted_folder(folder_name="sorted_folder"):
 	try:
@@ -12,16 +13,13 @@ def make_sorted_folder(folder_name="sorted_folder"):
 		print(f"") #TO add
 		sys.exit()
 
-def make_sub_dirs():
-	files = os.listdir()
-	print(files)
+def make_sub_dirs(files):
 	file_types = set()
 	no_dir_files = [] #files that are not directories
 	for x in files:
 		if os.path.isfile(x):
 			file_types.add(os.path.splitext(x)[1].strip(".").strip())
 			no_dir_files.append(x)
-	print(no_dir_files)
 	for x in file_types:
 		if x != '':
 			os.mkdir(x)
@@ -30,16 +28,21 @@ def make_sub_dirs():
 	return no_dir_files, file_types
 
 def move_all_files_to_sorted(folder_name):
-	os.system(f"mv * {folder_name}")
+	files = os.listdir()
+	for file in files:
+		if os.path.isfile(file):
+			shutil.move(file, folder_name)
+	return files
+
 
 def move_all_files_to_sub_dir(files, file_types):
+	print(files)
 	for file in files:
-		current_file_type = file.rsplit(".")[1] #problem here
-		print(current_file_type)
-		if current_file_type != '':
-			os.system(f"mv {file} {current_file_type}")
+		if len(file.rsplit(".")) == 1:
+			current_file_type = "no_file_type"
 		else:
-			os.system(f"mv {file} no_file_type")
+			current_file_type = file.rsplit(".")[-1].strip()
+		shutil.move(file, current_file_type)
 
 
 
@@ -47,8 +50,8 @@ def move_all_files_to_sub_dir(files, file_types):
 
 
 folder_name = make_sorted_folder()
-move_all_files_to_sorted(folder_name)
+files = move_all_files_to_sorted(folder_name)
 os.chdir(f"{folder_name}")
-files, file_types = make_sub_dirs()
+files, file_types = make_sub_dirs(files)
 move_all_files_to_sub_dir(files, file_types)
 

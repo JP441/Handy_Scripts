@@ -10,6 +10,7 @@ class FolderSorter():
 		print(self.all_files)
 		self.no_dir_files = []
 		self.file_types = set()
+		self.RED = "\033[31m"
 
 	def make_sorted_folder(self):
 		try:
@@ -53,11 +54,17 @@ class FolderSorter():
 
 	def move_all_files_to_sub_dir(self):
 		for file in self.no_dir_files:
-			if len(file.rsplit(".")) == 1:
-				current_file_type = "no_file_type"
-			else:
-				current_file_type = file.rsplit(".")[-1].strip()
-			shutil.move(file, current_file_type)
+			try:
+				if len(file.rsplit(".")) == 1:
+					current_file_type = "no_file_type"
+				else:
+					current_file_type = file.rsplit(".")[-1].strip()
+				shutil.move(file, current_file_type)
+			except shutil.Error:
+				msg = (f"Could not move {file} to {self.folder_name} "
+					 "as it already exists")
+				print(self.RED + msg)
+
 
 	def run_program(self):
 		self.make_sorted_folder()

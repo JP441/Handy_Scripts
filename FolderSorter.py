@@ -35,19 +35,20 @@ class FolderSorter():
 
 	def move_all_files_to_sorted(self):
 		if not self.move_folder:
-			for file in self.no_dir_files:
-				try:
-					shutil.move(file, self.folder_name)
-				except shutil.Error: 
-					print(f"Could not move {file} to {self.folder_name} "
-					 "as it already exists")
-			return
-		for file in self.all_files:
-			try:
+			files = self.no_dir_files
+		else:
+			files = self.all_files
+		for file in files:
+			try: 
 				shutil.move(file, self.folder_name)
-			except shutil.Error: 
-				print(f"Could not move {file} to {self.folder_name} "
-				 "as it already exists")
+			except shutil.Error:
+				self.print_file_collision_error(file, self.folder_name)
+
+	def print_file_collision_error(self, file, folder_name):
+		msg = (
+			f"Could not move {file} to {folder_name} " 
+			"as it already exists")
+		print(self.RED + msg)
 
 	def get_files_that_are_not_dir(self):
 		self.no_dir_files = [x for x in self.all_files if os.path.isfile(x)]
@@ -61,10 +62,7 @@ class FolderSorter():
 					current_file_type = file.rsplit(".")[-1].strip()
 				shutil.move(file, current_file_type)
 			except shutil.Error:
-				msg = (f"Could not move {file} to {self.folder_name} "
-					 "as it already exists")
-				print(self.RED + msg)
-
+				self.print_file_collision_error(file, current_file_type)
 
 	def run_program(self):
 		self.make_sorted_folder()

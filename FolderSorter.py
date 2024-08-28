@@ -11,6 +11,8 @@ class FolderSorter():
 		self.no_dir_files = []
 		self.file_types = set()
 		self.RED = "\033[31m"
+		self.GREEN = "\033[32m"
+		self.RESET = "\033[0m"
 
 	def make_sorted_folder(self):
 		try:
@@ -28,12 +30,15 @@ class FolderSorter():
 				try:
 					if x != '':
 						os.mkdir(x)
+						print(f"{self.GREEN} {x} directory created")
 					else:
 						os.mkdir("no_file_type")
+						print(f"{self.GREEN} no_file_type directory created")
 				except FileExistsError:
 					pass
 
 	def move_all_files_to_sorted(self):
+		print(f"############ moving files to {self.folder_name} ############")
 		if not self.move_folder:
 			files = self.no_dir_files
 		else:
@@ -41,6 +46,7 @@ class FolderSorter():
 		for file in files:
 			try: 
 				shutil.move(file, self.folder_name)
+				self.print_file_move_location(file, self.folder_name)
 			except shutil.Error:
 				self.print_file_collision_error(file, self.folder_name)
 
@@ -50,10 +56,16 @@ class FolderSorter():
 			"as it already exists")
 		print(self.RED + msg)
 
+	def print_file_move_location(self, file, folder_name):
+		print(f"{self.GREEN} {file} moved to {folder_name}")	
+
 	def get_files_that_are_not_dir(self):
 		self.no_dir_files = [x for x in self.all_files if os.path.isfile(x)]
 
 	def move_all_files_to_sub_dir(self):
+		print(
+			f"{self.RESET}############ moving files to sub directories " 
+			"############")
 		for file in self.no_dir_files:
 			try:
 				if len(file.rsplit(".")) == 1:
@@ -61,6 +73,7 @@ class FolderSorter():
 				else:
 					current_file_type = file.rsplit(".")[-1].strip()
 				shutil.move(file, current_file_type)
+				self.print_file_move_location(file, current_file_type)
 			except shutil.Error:
 				self.print_file_collision_error(file, current_file_type)
 

@@ -11,7 +11,8 @@
 
 <h3>Usage</h3>
 Unix systems
-```
+
+```bash
 python3 FolderSorter.py [folder_name] [move_folder]
 ```
 
@@ -22,6 +23,7 @@ python3 FolderSorter.py [folder_name] [move_folder]
 </ul>
 
 <h3>Example Usage</h3>
-```
+
+```bash
 python3 FolderSorter.py "organized_files" yes
 ```

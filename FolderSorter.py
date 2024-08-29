@@ -5,14 +5,41 @@ import shutil
 class FolderSorter():
 	def __init__(self):
 		self.folder_name = "sorted_folder"
-		self.move_folder = True
+		self.move_folder = False
 		self.all_files = os.listdir()
-		print(self.all_files)
 		self.no_dir_files = []
 		self.file_types = set()
 		self.RED = "\033[31m"
 		self.GREEN = "\033[32m"
 		self.RESET = "\033[0m"
+
+	def read_user_arguments(self):
+		try:
+			if len(sys.argv) == 2:
+				self.folder_name = str(sys.argv[1])
+			elif len(sys.argv) == 3:
+				self.folder_name = str(sys.argv[1])
+				self.check_move_folder_arg(str(sys.argv[2]).lower())
+			elif len(sys.argv) > 3:
+				print(
+					f"{self.RED}Too many arguments inputted, can only take 2 " 
+					"(folder_name and move_folder) please refer to Github " 
+					"README for help"
+					)
+				sys.exit()
+		except ValueError as ve:
+			print(ve)
+			sys.exit()
+
+	def check_move_folder_arg(self, arg):
+		if arg == "yes".lower():
+			self.move_folder = True
+		elif arg == "no".lower():
+			self.move_folder = False
+		else:
+			raise ValueError(
+				f"{self.RED} please type yes or no for arg 2 please refer to "
+				"Github README for help")
 
 	def make_sorted_folder(self):
 		try:
@@ -78,6 +105,7 @@ class FolderSorter():
 				self.print_file_collision_error(file, current_file_type)
 
 	def run_program(self):
+		self.read_user_arguments()
 		self.make_sorted_folder()
 		self.get_files_that_are_not_dir()
 		self.move_all_files_to_sorted()

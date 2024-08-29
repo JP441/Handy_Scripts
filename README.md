@@ -25,5 +25,5 @@ python3 FolderSorter.py [folder_name] [move_folder]
 <h3>Example Usage</h3>
 
 ```bash
-python3 FolderSorter.py "organized_files" yes
+python3 FolderSorter.py organized_files yes
 ```

@@ -13,6 +13,14 @@ class FolderSorter():
 		self.GREEN = "\033[32m"
 		self.RESET = "\033[0m"
 
+	#Windows Powershell does not understand these colours, so remove if windows
+	#OS is in use
+	def remove_terminal_colours_windows(self):
+		if sys.platform == "win32":
+			self.RED = ""
+			self.GREEN = ""
+			self.RESET = ""
+
 	def read_user_arguments(self):
 		try:
 			if len(sys.argv) == 2:
@@ -70,7 +78,8 @@ class FolderSorter():
 			files = self.no_dir_files
 		else:
 			files = self.all_files
-		files.remove(self.folder_name)
+		if self.folder_name in files:
+			files.remove(self.folder_name)
 		for file in files:
 			try: 
 				shutil.move(file, self.folder_name)
@@ -106,6 +115,7 @@ class FolderSorter():
 				self.print_file_collision_error(file, current_file_type)
 
 	def run_program(self):
+		self.remove_terminal_colours_windows()
 		self.read_user_arguments()
 		self.make_sorted_folder()
 		self.get_files_that_are_not_dir()

@@ -70,6 +70,7 @@ class FolderSorter():
 			files = self.no_dir_files
 		else:
 			files = self.all_files
+		files.remove(self.folder_name)
 		for file in files:
 			try: 
 				shutil.move(file, self.folder_name)

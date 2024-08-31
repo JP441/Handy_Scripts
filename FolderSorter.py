@@ -21,23 +21,52 @@ class FolderSorter():
 			self.GREEN = ""
 			self.RESET = ""
 
-	def read_user_arguments(self):
+	#Handles arguments based on amount inputted		
+	def process_cli_args(self):
 		try:
+			correct_args  = ["folder_name", "move_folder"]
+			used_args = []
 			if len(sys.argv) == 2:
-				self.folder_name = str(sys.argv[1])
+				self.validate_and_store_arg(
+					correct_args, used_args, sys.argv[1])
 			elif len(sys.argv) == 3:
-				self.folder_name = str(sys.argv[1])
-				self.check_move_folder_arg(str(sys.argv[2]).lower())
+				self.validate_and_store_arg(
+					correct_args, used_args, sys.argv[1])				
+				self.validate_and_store_arg(
+					correct_args, used_args, sys.argv[2])
 			elif len(sys.argv) > 3:
 				print(
-					f"{self.RED}Too many arguments inputted, can only take 2 " 
-					"(folder_name and move_folder) please refer to Github " 
-					"README for help"
-					)
+					f"{self.RED}Error: too many arguments inputted, can only "  
+					"take 2(folder_name and move_folder) ")
 				sys.exit()
-		except ValueError as ve:
-			print(ve)
+		except (ValueError, TypeError, Exception) as e:
+			print(e)
 			sys.exit()
+		except IndexError:
+			print(f"{self.RED}test")
+			sys.exit()
+
+	#Reads argument, checks that it is valid, stores argument
+	def validate_and_store_arg(self, correct_args, used_args, arg):
+		#Prevent multiple = signs
+		arg = [str(x) for x in arg.split("=") if x != ""]
+		if len(arg) < 2:
+			raise Exception(f"{self.RED}Error: arguments entered do not " 
+				"follow correct syntax of arg_type=arg_value")
+		arg_type = arg[0]
+		arg_value = arg[1]
+		if arg_type in used_args:
+			raise ValueError(f"{self.RED}Error: argument type {arg_type} has "
+				"been inputted more than once.")
+		elif not arg_type in correct_args:
+			raise TypeError(f"{self.RED}Error: unexpected argument provided. " 
+				"Only 'folder_name' or 'move_folder' are accepted.")
+		elif arg_type == "move_folder":
+			self.check_move_folder_arg(arg_value)
+		elif arg_type == "folder_name":
+			setattr(self, arg_type, arg_value)
+		used_args.append(arg_type)
+
 
 	def check_move_folder_arg(self, arg):
 		if arg == "yes".lower():
@@ -46,8 +75,8 @@ class FolderSorter():
 			self.move_folder = False
 		else:
 			raise ValueError(
-				f"{self.RED} please type yes or no for arg 2 please refer to "
-				"Github README for help")
+				f"{self.RED}Please only provide values yes or no for move_folder " 
+				"argument.")
 
 	def make_sorted_folder(self):
 		try:
@@ -116,7 +145,7 @@ class FolderSorter():
 
 	def run_program(self):
 		self.remove_terminal_colours_windows()
-		self.read_user_arguments()
+		self.process_cli_args()
 		self.make_sorted_folder()
 		self.get_files_that_are_not_dir()
 		self.move_all_files_to_sorted()

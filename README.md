@@ -25,5 +25,14 @@ python3 FolderSorter.py [folder_name] [move_folder]
 <h3>Example Usage</h3>
 
 ```bash
-python3 FolderSorter.py organized_files yes
+python3 FolderSorter.py
 ```
+The above command will make a folder called sorted_folder, and all files in the working directory except for directories, will be moved to it. The files will then be organised into sub directories. 
+
+```bash
+python3 FolderSorter.py folder_name=my_new_folder move_folder=yes
+```
+The above command will make a folder called "my_new_folder", and all files and directories in the working directory, will be moved to it. The files will then be organised into sub directories.
+
+<h3>Notes</h3>
+The script was primarily tested on a Linux OS. 

@@ -9,6 +9,7 @@ class FolderSorter():
 		self.all_files = os.listdir()
 		self.no_dir_files = []
 		self.file_types = set()
+		self.script = os.path.basename(__file__)
 		self.RED = "\033[31m"
 		self.GREEN = "\033[32m"
 		self.RESET = "\033[0m"
@@ -109,6 +110,8 @@ class FolderSorter():
 			files = self.all_files
 		if self.folder_name in files:
 			files.remove(self.folder_name)
+		if self.script in files:
+			files.remove(self.script)
 		for file in files:
 			try: 
 				shutil.move(file, self.folder_name)

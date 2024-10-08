@@ -133,7 +133,7 @@ class FolderSorter():
 
 	def move_all_files_to_sub_dir(self):
 		print(
-			f"{self.RESET}############ moving files to sub directories " 
+			f"{self.RESET}############ moving files to subdirectories " 
 			"############")
 		for file in self.no_dir_files:
 			try:
